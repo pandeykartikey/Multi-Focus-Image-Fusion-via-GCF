@@ -12,7 +12,8 @@ def min_projection(im): # Minimum Projection Operator
 
 	for i in range(0, r):
 		for j in range(0, c):
-			d = np.full(8, 255)
+			# d = np.full(8, 255) # for grayscale
+			d = np.full((8,3), 255) # for color
 			if i > 0 and i < r - 1:
 				d[0] = (im[i - 1][j] + im[i + 1][j])/2 - im[i][j]
 			if j > 0 and j < c - 1:
@@ -29,7 +30,8 @@ def min_projection(im): # Minimum Projection Operator
 				d[6] = im[i + 1][j] + im[i][j - 1] - im[i + 1][j - 1] - im[i][j]
 			if i < r - 1 and j < c - 1:
 				d[7] = im[i + 1][j] + im[i][j + 1] - im[i + 1][j + 1] - im[i][j]
-			dm[i][j] = min(d)
+
+			dm[i][j] = np.min(d)
 	return dm
 
 def GC(im, m): # To apply Gaussian Curvature filter m times on image
@@ -109,7 +111,7 @@ def dilate(c, n):
 			d = c[i][j]
 			for x in range(max(i - n/2, 0), min(i + n/2 + 1, c.shape[0])): 
 				for y in range(max(j - n/2, 0), min(j + n/2 + 1, c.shape[1])): # n should be odd to make patch of n*n
-					d = max(c[x][y], d)
+					d = np.maximum(c[x][y], d)
 			cm[i][j] = d
 	return cm
 
@@ -120,7 +122,7 @@ def erode(c, n):
 			d = c[i][j]
 			for x in range(max(i - n/2, 0), min(i + n/2 + 1, c.shape[0])): 
 				for y in range(max(j - n/2, 0), min(j + n/2 + 1, c.shape[1])): # n should be odd to make patch of n*n
-					d = min(c[x][y], d)
+					d = np.minimum(c[x][y], d)
 			cm[i][j] = d
 	return cm
 
@@ -142,13 +144,15 @@ def median_filter(c, n):
 				for y in range(max(j - n/2, 0), min(j + n/2 + 1, c.shape[1])):
 					count =count + 1
 					members.append(c[i][j])
-			members.sort()
+			np.sort(members)
 			m[x][y] = members[count/2]
 
 	return m
 
-im1 = cv2.imread("TestingImageDataset/testna_slika1a.bmp", cv2.IMREAD_GRAYSCALE)
-im2 = cv2.imread("TestingImageDataset/testna_slika1b.bmp", cv2.IMREAD_GRAYSCALE)
+# im1 = cv2.imread("TestingImageDataset/testna_slika2a.bmp", cv2.IMREAD_GRAYSCALE)
+# im2 = cv2.imread("TestingImageDataset/testna_slika2b.bmp", cv2.IMREAD_GRAYSCALE)
+im1 = cv2.imread("TestingImageDataset/p30a.jpg")
+im2 = cv2.imread("TestingImageDataset/p30b.jpg")
 
 # Parameters
 m =1 # no. of times gc filter is applied
@@ -177,46 +181,46 @@ row = 2
 column = 7
 fig=plt.figure()
 fig.add_subplot(row, column, 1)
-plt.imshow(im1, cmap='gray')
+plt.imshow(im1.astype(int), cmap='gray')
 
 fig.add_subplot(row, column, 2)
-plt.imshow(igc1, cmap='gray')
+plt.imshow(igc1.astype(int), cmap='gray')
 
 fig.add_subplot(row, column, 3)
-plt.imshow(f1, cmap='gray')
+plt.imshow(f1.astype(int), cmap='gray')
 
 fig.add_subplot(row, column, 4)
-plt.imshow(c1, cmap='gray')
+plt.imshow(c1.astype(int), cmap='gray')
 
 fig.add_subplot(row, column, 5)
-plt.imshow(cn1, cmap='gray')
+plt.imshow(cn1.astype(int), cmap='gray')
 
 fig.add_subplot(row, column, 6)
-plt.imshow(cm1, cmap='gray')
+plt.imshow(cm1.astype(int), cmap='gray')
 
 fig.add_subplot(row, column, 7)
-plt.imshow(final1, cmap='gray')
+plt.imshow(final1.astype(int), cmap='gray')
 
 fig.add_subplot(row, column, 8)
-plt.imshow(im2, cmap='gray')
+plt.imshow(im2.astype(int), cmap='gray')
 
 fig.add_subplot(row, column, 9)
-plt.imshow(igc2, cmap='gray')
+plt.imshow(igc2.astype(int), cmap='gray')
 
 fig.add_subplot(row, column, 10)
-plt.imshow(f2, cmap='gray')
+plt.imshow(f2.astype(int), cmap='gray')
 
 fig.add_subplot(row, column, 11)
-plt.imshow(c2, cmap='gray')
+plt.imshow(c2.astype(int), cmap='gray')
 
 fig.add_subplot(row, column, 12)
-plt.imshow(cn2, cmap='gray')
+plt.imshow(cn2.astype(int), cmap='gray')
 
 fig.add_subplot(row, column, 13)
-plt.imshow(cm2, cmap='gray')
+plt.imshow(cm2.astype(int), cmap='gray')
 
 fig.add_subplot(row, column, 14)
-plt.imshow(final2, cmap='gray')
+plt.imshow(final2.astype(int), cmap='gray')
 
 plt.show()
 
